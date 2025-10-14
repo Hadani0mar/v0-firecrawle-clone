@@ -24,7 +24,7 @@ import { useToast } from "@/hooks/use-toast"
 import ReactMarkdown from "react-markdown"
 import { Gauge } from "@/components/ui/gauge"
 
-type ServiceType = "crawl" | "search" | "reddit" | "maps"
+type ServiceType = "crawl" | "search" | "reddit" | "maps" | "maps_advanced"
 
 interface Service {
   id: ServiceType
@@ -82,6 +82,16 @@ const services: Service[] = [
     inputLabel: "إعدادات البحث",
     inputPlaceholder: "",
     tools: ["يتم الإرسال للـ API", "الـ AI يحلل البيانات", "الـ AI ينسق البيانات"],
+  },
+  {
+    id: "maps_advanced",
+    title: "الوضع المتقدم للخرائط",
+    description: "أدخل طلبك بصيغة طبيعية وتمتع بتنسيق Markdown",
+    icon: MapPin,
+    inputType: "text",
+    inputLabel: "وصف طلب الخرائط",
+    inputPlaceholder: "مثال: نبي افضل صيدليات في سبها من حيث التقييم",
+    tools: ["إرسال الرسالة", "تحليل الطلب", "تجهيز النتائج"],
   },
 ]
 
@@ -422,13 +432,17 @@ export function Services() {
       }))
       setToolExecutions(initialTools)
 
-      // Updated webhook URL
-      const webhookUrl = "https://n8n.m0usa.ly/webhook/bb038626-0fa0-48cf-8568-c5345088472e"
+      // Decide payload & webhook based on service
+      let webhookUrl = "https://n8n.m0usa.ly/webhook/bb038626-0fa0-48cf-8568-c5345088472e"
+      let payload: Record<string, unknown>
 
-      const job = service.jobTemplate!.replace(service.inputType === "url" ? "{url}" : "{query}", inputValue)
-
-      const payload = {
-        job: job,
+      if (selectedService === "maps_advanced") {
+        // Advanced maps: conversational style, send user's message to provided webhook
+        webhookUrl = "https://n8n.m0usa.ly:5678/webhook/14eeec20-52e2-4e3f-a8b7-7026697f0c17"
+        payload = { message: inputValue }
+      } else {
+        const job = service.jobTemplate!.replace(service.inputType === "url" ? "{url}" : "{query}", inputValue)
+        payload = { job }
       }
 
       console.log("[v0] Sending request to webhook:", webhookUrl)
