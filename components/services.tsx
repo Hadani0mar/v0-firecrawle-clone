@@ -438,7 +438,7 @@ export function Services() {
 
       if (selectedService === "maps_advanced") {
         // Advanced maps: conversational style, send user's message to provided webhook
-        webhookUrl = "https://n8n.m0usa.ly:5678/webhook/14eeec20-52e2-4e3f-a8b7-7026697f0c17"
+        webhookUrl = "https://n8n.m0usa.ly/webhook/14eeec20-52e2-4e3f-a8b7-7026697f0c17"
         payload = { message: inputValue }
       } else {
         const job = service.jobTemplate!.replace(service.inputType === "url" ? "{url}" : "{query}", inputValue)
