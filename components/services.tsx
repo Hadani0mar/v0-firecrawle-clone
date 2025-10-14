@@ -322,21 +322,35 @@ export function Services() {
       setRequestDuration(`${durationSeconds} ثانية`)
 
       // Format results as markdown
-      let markdown = `# نتائج البحث في خرائط Google\n\n`
-      markdown += `**الموقع:** ${mapsFormData.locationQuery}\n`
-      markdown += `**البحث عن:** ${mapsFormData.searchStringsArray}\n`
-      markdown += `**عدد النتائج:** ${resultsData.length}\n`
-      markdown += `**مدة الطلب:** ${durationSeconds} ثانية\n\n---\n\n`
+      let markdown = `# نتائج البحث في خرائط Google
+`
+      markdown += `**الموقع:** ${mapsFormData.locationQuery}
+`
+      markdown += `**البحث عن:** ${mapsFormData.searchStringsArray}
+`
+      markdown += `**عدد النتائج:** ${resultsData.length}
+`
+      markdown += `**مدة الطلب:** ${durationSeconds} ثانية
+---
+`
 
       resultsData.forEach((place: any, index: number) => {
-        markdown += `## ${index + 1}. ${place.title || "بدون اسم"}\n\n`
-        if (place.address) markdown += `**العنوان:** ${place.address}\n\n`
-        if (place.rating) markdown += `**التقييم:** ${place.rating} ⭐ (${place.reviewsCount || 0} تقييم)\n\n`
-        if (place.phone) markdown += `**الهاتف:** ${place.phone}\n\n`
-        if (place.website) markdown += `**الموقع:** [${place.website}](${place.website})\n\n`
-        if (place.categoryName) markdown += `**الفئة:** ${place.categoryName}\n\n`
-        if (place.url) markdown += `**رابط الخريطة:** [عرض على الخريطة](${place.url})\n\n`
-        markdown += `---\n\n`
+        markdown += `## ${index + 1}. ${place.title || "بدون اسم"}
+`
+        if (place.address) markdown += `**العنوان:** ${place.address}
+`
+        if (place.rating) markdown += `**التقييم:** ${place.rating} ⭐ (${place.reviewsCount || 0} تقييم)
+`
+        if (place.phone) markdown += `**الهاتف:** ${place.phone}
+`
+        if (place.website) markdown += `**الموقع:** [${place.website}](${place.website})
+`
+        if (place.categoryName) markdown += `**الفئة:** ${place.categoryName}
+`
+        if (place.url) markdown += `**رابط الخريطة:** [عرض على الخريطة](${place.url})
+`
+        markdown += `---
+`
       })
 
       setResult(markdown)
@@ -408,7 +422,7 @@ export function Services() {
       }))
       setToolExecutions(initialTools)
 
-      const webhookUrl = "https://n8n.m0usa.ly/webhook-test/bb038626-0fa0-48cf-8568-c5345088472e"
+      const webhookUrl = "https://n8n.m0usa.ly:5678/webhook/bb038626-0fa0-48cf-8568-c5345088472e"
 
       const job = service.jobTemplate!.replace(service.inputType === "url" ? "{url}" : "{query}", inputValue)
 
@@ -458,7 +472,8 @@ export function Services() {
           const chunk = decoder.decode(value, { stream: true })
           buffer += chunk
 
-          const lines = buffer.split("\n")
+          const lines = buffer.split("
+")
           buffer = lines.pop() || ""
 
           for (const line of lines) {
