@@ -67,7 +67,7 @@ const services: Service[] = [
     description: "ابحث في Reddit عن أفضل المنشورات والنقاشات المتعلقة باستفسارك",
     icon: MessageSquare,
     jobTemplate:
-      "ابحث في Reddit عن '{query}'. قم بتحليل الطلب وحدد أنسب subreddit وأنسب كلمة مفتاحية للبحث. أعد المنشور صاحب أعلى الأصوات (upvotes) وأكثر تفاعل وفائدة. قدم رابط المنشور والمحتوى الكامل بتنسيق واضح.",
+      "ابحث في Reddit عن '{query}'. قم بتحليل الطلب وحدد أنسب subreddit وأنسب كلمة مفتاحية للبحث. أعد المنشور صاحب أعلى الأصوات مع ملخص مختصر للردود.",
     inputType: "text",
     inputLabel: "ما الذي تريد البحث عنه في Reddit؟",
     inputPlaceholder: "مثال: أفضل نصائح البرمجة للمبتدئين",
@@ -422,7 +422,8 @@ export function Services() {
       }))
       setToolExecutions(initialTools)
 
-      const webhookUrl = "https://n8n.m0usa.ly:5678/webhook/bb038626-0fa0-48cf-8568-c5345088472e"
+      // Updated webhook URL
+      const webhookUrl = "https://n8n.m0usa.ly/webhook/bb038626-0fa0-48cf-8568-c5345088472e"
 
       const job = service.jobTemplate!.replace(service.inputType === "url" ? "{url}" : "{query}", inputValue)
 
@@ -472,8 +473,8 @@ export function Services() {
           const chunk = decoder.decode(value, { stream: true })
           buffer += chunk
 
-          const lines = buffer.split("
-")
+          // FIXED: correct split for lines
+          const lines = buffer.split("\n")
           buffer = lines.pop() || ""
 
           for (const line of lines) {
@@ -828,7 +829,7 @@ export function Services() {
                   <button
                     type="button"
                     onClick={() => setShowToolDetails(!showToolDetails)}
-                    className="flex w-full items-center justify-between rounded-lg border border-border bg-secondary p-4 text-sm font-medium text-foreground transition-all duration-200 hover:bg-secondary/80"
+                    className="flex w-full items-center justify-between rounded-lg border border-border bg-secondary p-4 text-sm font-medium text-foreground transition-all duration-200 hover:bg-secondary/70"
                   >
                     <span>تفاصيل الأدوات المستخدمة</span>
                     <ChevronDown
@@ -962,4 +963,4 @@ export function Services() {
       )}
     </section>
   )
-}
+    }
