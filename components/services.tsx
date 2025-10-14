@@ -24,7 +24,7 @@ import { useToast } from "@/hooks/use-toast"
 import ReactMarkdown from "react-markdown"
 import { Gauge } from "@/components/ui/gauge"
 
-type ServiceType = "crawl" | "search" | "reddit" | "maps" | "assistant"
+type ServiceType = "crawl" | "search" | "reddit" | "maps"
 
 interface Service {
   id: ServiceType
@@ -36,7 +36,6 @@ interface Service {
   inputLabel: string
   inputPlaceholder: string
   tools: string[]
-  webhookUrl?: string
 }
 
 const services: Service[] = [
@@ -50,9 +49,6 @@ const services: Service[] = [
     inputLabel: "رابط الموقع",
     inputPlaceholder: "https://example.com",
     tools: ["أداة الزحف", "معالج المحتوى", "منظم البيانات"],
-    webhookUrl:
-      process.env.NEXT_PUBLIC_WEBHOOK_CRAWL ??
-      "https://n8n.m0usa.ly/webhook/bb038626-0fa0-48cf-8568-c5345088472e",
   },
   {
     id: "search",
@@ -64,9 +60,6 @@ const services: Service[] = [
     inputLabel: "ما الذي تريد البحث عنه؟",
     inputPlaceholder: "أدخل استفسارك هنا...",
     tools: ["محرك البحث", "ويكيبيديا", "Reddit"],
-    webhookUrl:
-      process.env.NEXT_PUBLIC_WEBHOOK_SEARCH ??
-      "https://n8n.m0usa.ly/webhook/bb038626-0fa0-48cf-8568-c5345088472e",
   },
   {
     id: "reddit",
@@ -79,9 +72,6 @@ const services: Service[] = [
     inputLabel: "ما الذي تريد البحث عنه في Reddit؟",
     inputPlaceholder: "مثال: أفضل نصائح البرمجة للمبتدئين",
     tools: ["محلل الطلب", "باحث Reddit", "مرتب النتائج"],
-    webhookUrl:
-      process.env.NEXT_PUBLIC_WEBHOOK_REDDIT ??
-      "https://n8n.m0usa.ly/webhook/bb038626-0fa0-48cf-8568-c5345088472e",
   },
   {
     id: "maps",
@@ -92,20 +82,6 @@ const services: Service[] = [
     inputLabel: "إعدادات البحث",
     inputPlaceholder: "",
     tools: ["يتم الإرسال للـ API", "الـ AI يحلل البيانات", "الـ AI ينسق البيانات"],
-  },
-  {
-    id: "assistant",
-    title: "المساعد النصي",
-    description: "أنشئ مخرجات منسقة Markdown من خلال ويبهوك مخصص",
-    icon: Sparkles,
-    jobTemplate:
-      "نفّذ المهمة التالية '{query}' وأعد النتيجة بصيغة Markdown مع عناوين، قوائم وروابط مناسبة.",
-    inputType: "text",
-    inputLabel: "وصف المهمة",
-    inputPlaceholder: "مثال: اكتب تقريرًا موجزًا عن مزايا Next.js 15",
-    tools: ["تحليل الطلب", "توليد المخرجات", "تنسيق Markdown"],
-    // اضبط متغير البيئة NEXT_PUBLIC_WEBHOOK_ASSISTANT على رابط الويبهوك الجديد
-    webhookUrl: process.env.NEXT_PUBLIC_WEBHOOK_ASSISTANT,
   },
 ]
 
@@ -446,13 +422,8 @@ export function Services() {
       }))
       setToolExecutions(initialTools)
 
-      // استخدم رابط الويبهوك الخاص بكل خدمة
-      if (!service.webhookUrl) {
-        throw new Error(
-          "لم يتم ضبط عنوان الويبهوك لهذه الخدمة. الرجاء تعيين متغير البيئة المناسب (مثلاً NEXT_PUBLIC_WEBHOOK_SEARCH).",
-        )
-      }
-      const webhookUrl = service.webhookUrl
+      // Updated webhook URL
+      const webhookUrl = "https://n8n.m0usa.ly/webhook/bb038626-0fa0-48cf-8568-c5345088472e"
 
       const job = service.jobTemplate!.replace(service.inputType === "url" ? "{url}" : "{query}", inputValue)
 
